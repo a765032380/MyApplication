@@ -115,7 +115,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="dasda"
+                    android:text="0.00"
                     android:textSize="22sp" />
 
                 <EditText
@@ -138,6 +138,7 @@
                 android:background="#dddddd"></View>
 
             <LinearLayout
+                android:visibility="gone"
                 android:id="@+id/zhifu_yinhangka"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"

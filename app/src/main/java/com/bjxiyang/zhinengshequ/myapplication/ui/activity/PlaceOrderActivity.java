@@ -156,6 +156,13 @@ public class PlaceOrderActivity extends MySwipeBackActivity
             adapter=new PlaceOrderAdapter(this,list);
             lv_tijiaodingdan.setAdapter(adapter);
         }else {
+
+            for (int i=mList.size()-1;i>=0;i--){
+                if (mList.get(i).getSellerId() != SPManager.getInstance().getInt("sellerId", 0)) {
+                    mList.remove(i);
+                }
+            }
+
             for (int i=0;i<mList.size();i++){
 
                 if(mList.get(i).getIfDiscount()==0){
@@ -163,7 +170,6 @@ public class PlaceOrderActivity extends MySwipeBackActivity
                 }else {
                     jiage+=mList.get(i).getCount()*mList.get(i).getDiscountPrice();
                 }
-
                 count+=mList.get(i).getCount();
             }
             adapter=new PlaceOrderAdapter(this,mList);

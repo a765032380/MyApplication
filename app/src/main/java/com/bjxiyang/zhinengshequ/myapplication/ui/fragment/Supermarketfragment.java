@@ -178,6 +178,16 @@ public class Supermarketfragment extends Fragment implements
         super.onResume();
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        if (!hidden){
+            if (bottomSheetLayout!=null){
+                bottomSheetLayout.dismissSheet();
+            }
+        }
+        super.onHiddenChanged(hidden);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -199,6 +209,7 @@ public class Supermarketfragment extends Fragment implements
             tv_shopname.setText(SPManager.getInstance().getString("shopName",""));
             getShangPingList(SPManager.getInstance().getInt("sellerId",-1));
         }
+//        tv_totle_money.setText("￥"+ String.valueOf(df.format(UnitGetGouWuChe.getZongJia())));
         update(false);
         return view;
     }
@@ -678,7 +689,7 @@ public class Supermarketfragment extends Fragment implements
                 clearCart();
             }
         });
-        mList=DaoUtils.getStudentInstance().QueryAll(GouWuChe.class);
+//        mList=DaoUtils.getStudentInstance().QueryAll(GouWuChe.class);
         for (int i=mList.size()-1;i>=0;i--){
             if (mList.get(i).getSellerId()!=SPManager.getInstance().getInt("sellerId",0)){
                 mList.remove(i);
@@ -826,7 +837,7 @@ public class Supermarketfragment extends Fragment implements
             bv_unm.setVisibility(View.VISIBLE);
         }
 
-        bv_unm.setText(String.valueOf(count));
+        bv_unm.setText(String.valueOf(UnitGetGouWuChe.getConuntAll()));
 
 
         if(productAdapter!=null){
@@ -993,16 +1004,19 @@ public class Supermarketfragment extends Fragment implements
                 if (dianMing.getCode() == BianLiDianStatus.STATUS_CODE_SUCCESS){
                     resultList = dianMing.getResult();
                     result=resultList.get(0);
-                    mList=DaoUtils.getStudentInstance().QueryAll(GouWuChe.class);
-                    for (int i=0;i<mList.size();i++){
-                        if (mList.get(i).getSellerId()==result.getId()){
-                            if (UnitGetGouWuChe.getZongJia()!=0){
-                                tv_totle_money.setText("￥"+ String.valueOf(df.format(UnitGetGouWuChe.getZongJia())));
-                            }
-                            int count =UnitGetGouWuChe.getConuntAll();
-                            bv_unm.setText(String.valueOf(count));
-                        }
-                    }
+//                    mList=DaoUtils.getStudentInstance().QueryAll(GouWuChe.class);
+//                    for (int i=0;i<mList.size();i++){
+////                        if (mList.get(i).getSellerId()==result.getId()){
+////                            if (UnitGetGouWuChe.getZongJia()!=0){
+////                                tv_totle_money.setText("￥"+ String.valueOf(df.format(UnitGetGouWuChe.getZongJia())));
+////                            }
+////                            int count =UnitGetGouWuChe.getConuntAll();
+////                            bv_unm.setText(String.valueOf(count));
+////                        }
+//
+//                    }
+                    //18706451620
+                    //120688jj
 //                    List<Integer> list=new ArrayList();
 //                    for (int i=0;i<list_fenlei.size();i++){
 //                        for (int j=0;j<list_fenlei.get(i).getProducts().size();j++){
@@ -1023,7 +1037,7 @@ public class Supermarketfragment extends Fragment implements
                     getShangPingList(result.getId());
                     sellerId=result.getId();
                     tv_shopname.setText(result.getShopName());
-
+                    update(false);
 //                    ListViewDialog listViewDialog=new ListViewDialog(getActivity(),resultList);
 //
 //                    listViewDialog.setOnsetselect(new ListViewDialog.Onsetselect() {
@@ -1114,15 +1128,21 @@ public class Supermarketfragment extends Fragment implements
                 DialogUntil.closeLoadingDialog();
                 if (selectPlot.getCode().equals("1000")){
                     mList_plot = selectPlot.getObj();
-                    if (mList_plot==null){
-                        MyUntil.show(getContext(),"请选择小区");
-//                        Intent intent = new Intent(getContext(),XYXuanZeXiaoQuActivity.class);
-//                        startActivity(intent);
-                    }else {
+                    if (mList_plot.size()>0){
                         showActionSheet(mList_plot);
+                    }else {
+                        MyUntil.show(getContext(),"请选择小区");
+                        SPManager.getInstance().remove("sellerId");
                     }
-
+//                    if (mList_plot==null){
+//                        MyUntil.show(getContext(),"请选择小区");
+////                        Intent intent = new Intent(getContext(),XYXuanZeXiaoQuActivity.class);
+////                        startActivity(intent);
+//                    }else {
+//                        showActionSheet(mList_plot);
+//                    }
                 }else {
+                    SPManager.getInstance().remove("sellerId");
 //                    Toast.makeText(getActivity(),selectPlot.getMsg(),Toast.LENGTH_LONG).show();
                 }
             }
