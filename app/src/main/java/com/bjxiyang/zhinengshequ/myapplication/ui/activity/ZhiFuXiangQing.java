@@ -47,6 +47,8 @@ import java.util.Map;
  * Created by Administrator on 2017/6/15 0015.
  */
 
+
+//【程序猿的三重境界】第一重:无尽bug常作客,困闷调试伴不眠。第二重:千行代码过,bug不沾身。第三重:编码间,bug灰飞烟灭。
 public class ZhiFuXiangQing extends MySwipeBackActivity implements View.OnClickListener{
     private RelativeLayout rl_chaoshifukuan_xiangqing_fanhui;
     private TextView tv_item_chaoshifukuan_xiangqing_dianming;
