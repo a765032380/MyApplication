@@ -91,41 +91,41 @@ public class ProductAdapter extends BaseAdapter {
 //            for (int i = 0; i < mList.size(); i++) {
 //                if (mList.get(i).getSpid() == dataList.get(position).getId()) {
         gouWuChe=null;
+//        mList=DaoUtils.getStudentInstance().QueryAll(GouWuChe.class);
+        gouWuChe =dataList.get(position);
 
-        gouWuChe = dataList.get(position);
-
-        if(gouWuChe!=null){
-            //默认进来数量
-            if (gouWuChe.getCount()<1){
-                DaoUtils.getStudentInstance().deleteObject(gouWuChe);
-//                dataList.remove(position);
-                notifyDataSetChanged();
-            }else{
-                viewholder.tv_count.setText(String.valueOf(gouWuChe.getCount()));
-                notifyDataSetChanged();
+            if (gouWuChe != null) {
+                //默认进来数量
+                if (gouWuChe.getCount() < 1) {
+                    DaoUtils.getStudentInstance().deleteObject(gouWuChe);
+//                    dataList.remove(position);
+                    notifyDataSetChanged();
+                } else {
+                    viewholder.tv_count.setText(String.valueOf(gouWuChe.getCount()));
+                    notifyDataSetChanged();
+                }
             }
-        }
 //                }
 //            }
 //        } else {
 //            gouWuChe= SPToGouWuChe.spToGouWuChe(dataList.get(position));
 //            DaoUtils.getStudentInstance().insertObject(gouWuChe);
 //        }
-            StringUtils.filtNull(viewholder.tv_name,dataList.get(position).getName());//商品名称
-        if (dataList.get(position).getIfDiscount()==0){
-            StringUtils.filtNull(viewholder.tv_price,"￥"+df.format((double) dataList.get(position).getPrice()/100));//商品价格
-        }else {
-            StringUtils.filtNull(viewholder.tv_price,"￥"+df.format((double) dataList.get(position).getDiscountPrice()/100));//商品价格
-        }
+            StringUtils.filtNull(viewholder.tv_name, dataList.get(position).getName());//商品名称
+            if (dataList.get(position).getIfDiscount() == 0) {
+                StringUtils.filtNull(viewholder.tv_price, "￥" + df.format((double) dataList.get(position).getPrice() / 100));//商品价格
+            } else {
+                StringUtils.filtNull(viewholder.tv_price, "￥" + df.format((double) dataList.get(position).getDiscountPrice() / 100));//商品价格
+            }
 
 
-        viewholder.tv_count.setText(String.valueOf(dataList.get(position).getCount()));//商品数量
+            viewholder.tv_count.setText(String.valueOf(dataList.get(position).getCount()));//商品数量
 
-            final int position1=position;
+            final int position1 = position;
             viewholder.iv_add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    activity.handlerCarNum(1,dataList.get(position1),true);
+                    activity.handlerCarNum(1, dataList.get(position1), true);
                     goodsAdapter.notifyDataSetChanged();
 
                 }
@@ -133,10 +133,15 @@ public class ProductAdapter extends BaseAdapter {
             viewholder.iv_remove.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    activity.handlerCarNum(0,dataList.get(position1),true);
+//                    gouWuChe.setCount(gouWuChe.getCount() - 1);
+//                    if (gouWuChe.getCount()==0) {
+//                        dataList.remove(position1);
+//                    }
+                    activity.handlerCarNum(0, dataList.get(position1), true);
                     goodsAdapter.notifyDataSetChanged();
                 }
             });
+
 
         return view;
     }

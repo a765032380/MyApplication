@@ -139,6 +139,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         if (SPManager.getInstance().getBoolean("isOne",false)){
             nperId=SPManager.getInstance().getInt("nperId_one",0);
             communityId=SPManager.getInstance().getInt("communityId_one",0);
+
             floorId=SPManager.getInstance().getInt("floorId_one",0);
             unitId=SPManager.getInstance().getInt("unitId_one",0);
             mTextSwitcher.setText(SPManager.getInstance().getString("test_men",""));
@@ -272,6 +273,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         unitId=mList.get(position).getUnitId();
                         SPManager.getInstance().putBoolean("isOne",true);
                         SPManager.getInstance().putInt("communityId_one",communityId);
+                        SPManager.getInstance().putInt("communityId",communityId);
                         SPManager.getInstance().putInt("nperId_one",nperId);
                         SPManager.getInstance().putInt("floorId_one",floorId);
                         SPManager.getInstance().putInt("unitId_one",unitId);

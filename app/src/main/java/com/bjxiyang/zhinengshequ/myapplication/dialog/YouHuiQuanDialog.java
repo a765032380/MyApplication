@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -113,8 +114,13 @@ int headerViewsCount;
                             continue;
                         }
                     }
+
                     TextView textView=new TextView(getContext());
-                    textView.setTextSize(20);
+                    textView.setMinimumHeight(130);
+                    textView.setTextSize(18);
+                    textView.setBackgroundResource(R.color.color_eeeeee);
+
+                    textView.setGravity(Gravity.CENTER);
                     if (mList.size()<0){
                         textView.setText("无可用优惠券");
                         lv_youhuiquan.addHeaderView(textView);

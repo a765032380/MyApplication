@@ -99,14 +99,17 @@ public class MainActivity extends BeasActivity implements View.OnClickListener{
 
     public static boolean isForeground = false;
     private MessageReceiver mMessageReceiver;
+
     public static final String MESSAGE_RECEIVED_ACTION = "com.bjxiyang.com.myapplication.MESSAGE_RECEIVED_ACTION";
     public static final String KEY_TITLE = "title";
     public static final String KEY_MESSAGE = "message";
     public static final String KEY_EXTRAS = "extras";
+    public static MainActivity mainActivity;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mainActivity=this;
         checkVersion();
 
         quanxian();

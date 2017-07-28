@@ -56,6 +56,7 @@ import com.bjxiyang.zhinengshequ.myapplication.ui.activity.XYXuanZeXiaoQuActivit
 import com.bjxiyang.zhinengshequ.myapplication.until.CollectionUtil;
 import com.bjxiyang.zhinengshequ.myapplication.until.DensityUtil;
 import com.bjxiyang.zhinengshequ.myapplication.until.DialogUntil;
+import com.bjxiyang.zhinengshequ.myapplication.until.LogOutUntil;
 import com.bjxiyang.zhinengshequ.myapplication.until.SPToGouWuChe;
 import com.bjxiyang.zhinengshequ.myapplication.until.UnitGetGouWuChe;
 import com.bjxiyang.zhinengshequ.myapplication.view.MyDialog;
@@ -89,6 +90,7 @@ public class Supermarketfragment extends Fragment implements
 
     private SwipeRefreshLayout swipeRefreshLayout1;
     private SwipeRefreshLayout swipeRefreshLayout2;
+    private SwipeRefreshLayout swipeRefreshLayout3;
     private LinearLayout ll_shopname;
     private ListView lv_catogary, lv_good;
     private ImageView iv_logo;
@@ -136,6 +138,7 @@ public class Supermarketfragment extends Fragment implements
     private TextView tv_shuliang1;
     private TextView tv_xuanhaole;
     private TextView tv_zongjia;
+    private LinearLayout ll_first;
     private boolean isShow=false;
     private TextView tv_shopname;
     private List<DianMing.Result> resultList;
@@ -159,7 +162,16 @@ public class Supermarketfragment extends Fragment implements
     private List<ShangPinList.Result.Products> list_shangpin2;
     @Override
     public void onResume() {
-        if (communityId!=-1){
+
+        communityId = SPManager.getInstance().getInt("communityId",-1);
+        Log.i("YYY","测试显示无数据"+communityId);
+        if (communityId==-1){
+
+            showSelectSJ();
+            MyUntil.show(getContext(),"请选择商家");
+        } else if (communityId==-2){
+            showWuShuJu();
+        } else{
             getDianMing(communityId);
         }
 
@@ -181,6 +193,28 @@ public class Supermarketfragment extends Fragment implements
     @Override
     public void onHiddenChanged(boolean hidden) {
         if (!hidden){
+
+            communityId = SPManager.getInstance().getInt("communityId",-1);
+            Log.i("YYY","测试显示无数据"+communityId);
+            if (communityId==-1){
+                showSelectSJ();
+                MyUntil.show(getContext(),"请选择商家");
+            } else if (communityId==-2){
+                showWuShuJu();
+            } else{
+                getDianMing(communityId);
+            }
+            if(productAdapter!=null){
+                productAdapter.notifyDataSetChanged();
+            }
+
+            if(goodsAdapter!=null){
+                goodsAdapter.notifyDataSetChanged();
+            }
+
+            if(catograyAdapter!=null){
+                catograyAdapter.notifyDataSetChanged();
+            }
             if (bottomSheetLayout!=null){
                 bottomSheetLayout.dismissSheet();
             }
@@ -217,8 +251,11 @@ public class Supermarketfragment extends Fragment implements
 
 
     public void initView() {
+        ll_first= (LinearLayout) view.findViewById(R.id.ll_first);
         swipeRefreshLayout1= (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout1);
         swipeRefreshLayout2= (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout2);
+        swipeRefreshLayout3= (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout3);
+        swipeRefreshLayout3.setOnRefreshListener(this);
         swipeRefreshLayout1.setOnRefreshListener(this);
         swipeRefreshLayout2.setOnRefreshListener(this);
         tv_shopname= (TextView) view.findViewById(R.id.tv_shopname);
@@ -689,7 +726,8 @@ public class Supermarketfragment extends Fragment implements
                 clearCart();
             }
         });
-//        mList=DaoUtils.getStudentInstance().QueryAll(GouWuChe.class);
+
+        mList=DaoUtils.getStudentInstance().QueryAll(GouWuChe.class);
         for (int i=mList.size()-1;i>=0;i--){
             if (mList.get(i).getSellerId()!=SPManager.getInstance().getInt("sellerId",0)){
                 mList.remove(i);
@@ -765,6 +803,8 @@ public class Supermarketfragment extends Fragment implements
 //            }
         }else if (type==0){
             if (gouWuChe1!=null){
+
+
                 if (gouWuChe1.getCount()>1){
                     gouWuChe1.setCount(gouWuChe1.getCount()-1);
                     DaoUtils.getStudentInstance().updateObject(gouWuChe1);
@@ -779,6 +819,7 @@ public class Supermarketfragment extends Fragment implements
 //                    tv_zongjia.setText(String.valueOf(0));
                     gouWuChe1.setCount(0);
                     DaoUtils.getStudentInstance().updateObject(gouWuChe1);
+//                    DaoUtils.getStudentInstance().deleteObject(gouWuChe1);
                 }
             }
         }
@@ -1001,9 +1042,10 @@ public class Supermarketfragment extends Fragment implements
             @Override
             public void onSuccess(Object responseObj) {
                 DianMing dianMing= (DianMing) responseObj;
-                if (dianMing.getCode() == BianLiDianStatus.STATUS_CODE_SUCCESS){
+                if (dianMing.getCode() == BianLiDianStatus.STATUS_CODE_SUCCESS) {
+
                     resultList = dianMing.getResult();
-                    result=resultList.get(0);
+                    result = resultList.get(0);
 //                    mList=DaoUtils.getStudentInstance().QueryAll(GouWuChe.class);
 //                    for (int i=0;i<mList.size();i++){
 ////                        if (mList.get(i).getSellerId()==result.getId()){
@@ -1031,16 +1073,18 @@ public class Supermarketfragment extends Fragment implements
 //                            }
 //                        }
 //                    }
-                    Log.i("YYYY",result.getShopName()+"---"+result.getId());
-                    SPManager.getInstance().putInt("sellerId",result.getId());
-                    SPManager.getInstance().putString("shopName",result.getShopName());
-                    getShangPingList(result.getId());
-                    sellerId=result.getId();
+
+                    SPManager.getInstance().putInt("sellerId", result.getId());
+                    SPManager.getInstance().putString("shopName", result.getShopName());
+                    sellerId = result.getId();
+
                     tv_shopname.setText(result.getShopName());
                     update(false);
+                    getShangPingList(result.getId());
+//                    }
 //                    ListViewDialog listViewDialog=new ListViewDialog(getActivity(),resultList);
 //
-//                    listViewDialog.setOnsetselect(new ListViewDialog.Onsetselect() {
+//                    listViewDia                            log.setOnsetselect(new ListViewDialog.Onsetselect() {
 //                        @Override
 //                        public void getDianMingResult(DianMing.Result result1) {
 //                            result=result1;
@@ -1064,7 +1108,10 @@ public class Supermarketfragment extends Fragment implements
 //                        }
 //                    });
 //                    listViewDialog.show();
-                }else {
+                }else if (dianMing.getCode()==BianLiDianStatus.STATUS_CODE_ERROR_USER_NOTLOGIN){
+                    LogOutUntil.logout();
+                }
+                else {
                     showWuShuJu();
 //                    MyUntil.show(getContext(),dianMing.getMsg());
                 }
@@ -1079,6 +1126,7 @@ public class Supermarketfragment extends Fragment implements
 
     }
     private void getShangPingList(int sellerId){
+        Log.i("YYY","测试显示无数据sellerId="+sellerId);
         DialogUntil.showLoadingDialog(getContext(),"正在加载",true);
         String url_list=BianLiDianResponse.URL_PRODUCT_LIST+"sellerId="+sellerId;
         RequestCenter.order_product_list(url_list, new DisposeDataListener() {
@@ -1090,11 +1138,11 @@ public class Supermarketfragment extends Fragment implements
                 if (shangPinList.getCode()==BianLiDianStatus.STATUS_CODE_SUCCESS){
                     //分类
                     list_fenlei=shangPinList.getResult();
-                    catograyAdapter = new CatograyAdapter(mContext, list_fenlei);
-                    lv_catogary.setAdapter(catograyAdapter);
-                    catograyAdapter.notifyDataSetChanged();
                     //商品
                     if (list_fenlei.size()>0) {
+                        catograyAdapter = new CatograyAdapter(mContext, list_fenlei);
+                        lv_catogary.setAdapter(catograyAdapter);
+                        catograyAdapter.notifyDataSetChanged();
                         list_shangpin = list_fenlei.get(0).getProducts();
                         goodsAdapter = new GoodsAdapter(
                                 mContext, Supermarketfragment.this, list_shangpin, catograyAdapter);
@@ -1208,19 +1256,44 @@ public class Supermarketfragment extends Fragment implements
 
     @Override
     public void onRefresh() {
-       getDianMing(SPManager.getInstance().getInt("communityId",0));
+        communityId = SPManager.getInstance().getInt("communityId",-1);
+
+        if (communityId==-1){
+            showSelectSJ();
+            MyUntil.show(getContext(),"请选择商家");
+        }else if (communityId==-2){
+            showWuShuJu();
+        } else{
+            getDianMing(communityId);
+
+        }
         swipeRefreshLayout1.setRefreshing(false);
         swipeRefreshLayout2.setRefreshing(false);
+        swipeRefreshLayout3.setRefreshing(false);
     }
     private void showList(){
-        swipeRefreshLayout1.setVisibility(View.VISIBLE);
+        ll_first.setVisibility(View.VISIBLE);
         swipeRefreshLayout2.setVisibility(View.GONE);
+        swipeRefreshLayout3.setVisibility(View.GONE);
     }
     private void showWuShuJu(){
+        SPManager.getInstance().putInt("sellerId",-1);
+        SPManager.getInstance().putInt("communityId",-2);
         tv_shopname.setText("店名");
         bv_unm.setText("0");
         tv_totle_money.setText("￥0.00");
-        swipeRefreshLayout1.setVisibility(View.GONE);
+        ll_first.setVisibility(View.GONE);
         swipeRefreshLayout2.setVisibility(View.VISIBLE);
+        swipeRefreshLayout3.setVisibility(View.GONE);
+    }
+    private void showSelectSJ(){
+        SPManager.getInstance().putInt("sellerId",-1);
+        SPManager.getInstance().putInt("communityId",-1);
+        tv_shopname.setText("店名");
+        bv_unm.setText("0");
+        tv_totle_money.setText("￥0.00");
+        ll_first.setVisibility(View.GONE);
+        swipeRefreshLayout2.setVisibility(View.GONE);
+        swipeRefreshLayout3.setVisibility(View.VISIBLE);
     }
 }

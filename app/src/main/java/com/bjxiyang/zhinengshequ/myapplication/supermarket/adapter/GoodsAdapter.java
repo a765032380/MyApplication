@@ -100,9 +100,12 @@ public class GoodsAdapter extends BaseAdapter{
 
 
         if (list.get(position).getIfDiscount()==0){
-            viewholder.tv_price.setVisibility(View.INVISIBLE);
-            viewholder.tv_original_price.setText("￥"+df.format((double) list.get(position).getPrice()/100));
+            viewholder.tv_original_price.setVisibility(View.INVISIBLE);
+            viewholder.tv_price.setText("￥"+df.format((double) list.get(position).getPrice()/100));
+//            viewholder.tv_price.setVisibility(View.INVISIBLE);
+//            viewholder.tv_original_price.setText("￥"+df.format((double) list.get(position).getPrice()/100));
         }else {
+            viewholder.tv_original_price.setVisibility(View.VISIBLE);
             viewholder.tv_price.setText("￥"+df.format((double) list.get(position).getDiscountPrice()/100));
             viewholder.tv_original_price.getPaint().setFlags(Paint. STRIKE_THRU_TEXT_FLAG); //中划线
             viewholder.tv_original_price.setText("￥"+df.format((double) list.get(position).getPrice()/100));

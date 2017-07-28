@@ -119,7 +119,7 @@ public class SDLoginActivity extends BeasActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_sdlogin);
-//        getQuanxian();
+        getQuanxian();
 
         //判断有没有用户的信息,如果有,直接跳转到主界面
         if (SPManager.getInstance().getString("mobilePhone",null)!=null){
@@ -298,7 +298,6 @@ public class SDLoginActivity extends BeasActivity {
                     Toast.makeText(SDLoginActivity.this,"请输入8~16位密码,密码必须包含字母和数字",Toast.LENGTH_LONG).show();
                     return;
                 }
-                getIMEI();
                 //弹出正在登陆的等待动画
                 DialogUntil.showLoadingDialog(SDLoginActivity.this,"正在登陆",true);
                 //拼接访问的URL
@@ -408,6 +407,13 @@ public class SDLoginActivity extends BeasActivity {
                 if (!password.equals(password_two)){
                     Toast.makeText(SDLoginActivity.this,"两次输入密码不一致",Toast.LENGTH_LONG).show();
                     return;
+                }
+                if (Build.VERSION.SDK_INT >= 23) {
+                    if(ContextCompat.checkSelfPermission(SDLoginActivity.this,
+                            Manifest.permission.READ_PHONE_STATE)== PackageManager.PERMISSION_GRANTED){
+                        getIMEI();
+                    }
+
                 }
                 //弹出正在注册的Dialog
                 DialogUntil.showLoadingDialog(SDLoginActivity.this,"正在注册",true);
@@ -669,16 +675,13 @@ public class SDLoginActivity extends BeasActivity {
     public void getQuanxian() {
         if (Build.VERSION.SDK_INT >= 23) {
             if(ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.READ_PHONE_STATE)!= PackageManager.PERMISSION_GRANTED
-                    ||ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.READ_CONTACTS)!= PackageManager.PERMISSION_GRANTED){
+                    Manifest.permission.READ_PHONE_STATE)!= PackageManager.PERMISSION_GRANTED){
                 android.support.v4.app.ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_SETTINGS,
-                                Manifest.permission.READ_PHONE_STATE,
-                                Manifest.permission.READ_CONTACTS},1);
+                        new String[]{Manifest.permission.READ_PHONE_STATE},1);
 
             }
 
         }
     }
+
 }

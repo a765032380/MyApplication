@@ -28,9 +28,9 @@ public class BeasActivity extends AppCompatActivity{
                 .withCollectNDKCrash(true) //  收集NDK崩溃信息
                 .withOpenCrash(true)    // 收集崩溃信息开关
                 .withOpenEx(true)     // 是否收集异常信息
-                .withReportOnlyWifi(true)    // 仅在 WiFi 下上报崩溃信息
+                .withReportOnlyWifi(false)    // 仅在 WiFi 下上报崩溃信息
                 .withReportOnBack(true)    // 当APP在后台运行时,是否采集信息
-                .withQAMaster(true)    // 是否收集摇一摇反馈
+                .withQAMaster(false)    // 是否收集摇一摇反馈
                 .withCloseOption(false)   // 是否在摇一摇菜单展示‘关闭摇一摇选项’
                 .withLogCat(true)  // 是否系统操作信息
                 .build();
